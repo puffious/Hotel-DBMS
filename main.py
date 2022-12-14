@@ -1,12 +1,17 @@
 from os import system as terminal
 import mysql.connector as sql
+from time import sleep
 
 def connection():
     global cursor
     global connect
     connect = sql.connect(host='localhost', user='root', password='Visma@123')
     cursor = connect.cursor
+    cursor.execute("create database if not exists Param")
     cursor.execute("use Param")
+    cursor.execute("create table if not exists room (number int(2) primary key, type varchar(10), cost int(6), avail int(1) default 1)")
+    cursor.execute("create table if not exists customer (number int(2), name varchar(50), total int(2))")
+    connect.commit
     if connect.is_connected():
         return True
     else:
@@ -16,9 +21,10 @@ def rshow():
     global cursor
     global connect
     cursor.execute("select * from room")
-    data = connect.fetchall()
+    data = cursor.fetchall()
     for x in data:
         print(x)
+    sleep(10)
 
 def radd():
     global cursor
@@ -153,9 +159,10 @@ def cshow():
     global cursor
     global connect
     cursor.execute("select * from customer")
-    data = connect.fetchall()
+    data = cursor.fetchall()
     for x in data:
         print(x)
+    sleep(10)
 
 def customer():
     while True:
