@@ -5,22 +5,22 @@ from time import sleep
 def connection():
     global cursor
     global connect
-    connect = sql.connect(host='localhost', user='root', password='Visma@123')
-    cursor = connect.cursor
+    connect = sql.connect(host='127.0.0.1', user='root', password='a3glolop')
+    cursor = connect.cursor()
     cursor.execute("create database if not exists Param")
     cursor.execute("use Param")
-    cursor.execute("create table if not exists room (number int(2) primary key, type varchar(10), cost int(6), avail int(1) default 1)")
-    cursor.execute("create table if not exists customer (number int(2), name varchar(50), total int(2))")
+    cursor.execute("create table if not exists room(number int(2) primary key, type varchar(10), cost int(6), avail int(1) default 1)")
+    cursor.execute("create table if not exists customer(number int(2), name varchar(50), total int(2))")
     connect.commit
     if connect.is_connected():
         return True
     else:
         return False
 
-def rshow():
+def show(table):
     global cursor
     global connect
-    cursor.execute("select * from room")
+    cursor.execute(f"select * from {table}")
     data = cursor.fetchall()
     for x in data:
         print(x)
@@ -29,19 +29,19 @@ def rshow():
 def radd():
     global cursor
     global connect
-    terminal("clear")
+    terminal("cls")
     print("Room Add Menu")
     number = int(input("Number: "))
     type = input("Type: ")
     cost = int(input("Cost: "))
 
-    cursor.execute(f"insert into room values({number},'{type}',{cost})")
+    cursor.execute(f"insert into room values({number},'{type}',{cost},1)")
     connect.commit()
 
 def rmodify():
     global cursor
     global connect
-    terminal("clear")
+    terminal("cls")
     print("Room Modify Menu")
     print("1: Update Number: ")
     print("2: Update Type: ")
@@ -85,14 +85,23 @@ def rdelete():
     cursor.execute(f"delete from room where number={number}")
     connect.commit()
         
+def avail():
+    global cursor
+    global connect
+    cursor.execute("select * from room where avail = 1")
+    data = cursor.fetchall()
+    for x in data:
+        print(x)
+
 def room():
     while True:
-        terminal("clear")
+        terminal("cls")
         print("Room Menu")
         print("1: Add")
         print("2: Modify")
         print("3: Delete")
         print("4: Show")
+        print("5: Available Rooms")
         print("5: Return")
 
         choice = int(input("Choice: "))
@@ -103,9 +112,9 @@ def room():
         elif choice == 3:
             rdelete()
         elif choice == 4:
-            cshow()
+            show("room")
         elif choice == 5:
-            return
+            avail()
 
 def cadd():
     global cursor
@@ -120,7 +129,7 @@ def cadd():
 def cmodify():
     global cursor
     global connect
-    terminal("clear")
+    terminal("cls")
     terminal("Customer Modify Menu")
     print("1: Update Number")
     print("2: Update Name")
@@ -155,18 +164,9 @@ def cdelete():
     cursor.execute(f"delete from customer where number={number}")
     connect.commit()
 
-def cshow():
-    global cursor
-    global connect
-    cursor.execute("select * from customer")
-    data = cursor.fetchall()
-    for x in data:
-        print(x)
-    sleep(10)
-
 def customer():
     while True:
-        terminal("clear")
+        terminal("cls")
         print("Customer Menu")
         print("1: Add Info")
         print("2: Modify Info")
@@ -182,13 +182,13 @@ def customer():
         elif choice == 3:
             cdelete()
         elif choice == 4:
-            cshow()
+            show("customer")
         elif choice == 5:
             return
 
 def main():
     while True:
-        terminal("clear")
+        terminal("cls")
         print("Main Menu")
         print("1: Room")
         print("2: Customer")
