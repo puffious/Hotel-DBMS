@@ -22,9 +22,17 @@ def show(table):
     global connect
     cursor.execute(f"select * from {table}")
     data = cursor.fetchall()
-    for x in data:
-        print(x)
+    if cursor.row_count() > 0:
+        for x in data:
+            print(x)
 
+def confirm():
+    global cursor
+    global connect
+    sure = input("Confirm Changes, (Y)es or (N)o ").lower()
+    if sure == "y" or sure == "yes":
+        connect.commit()
+            
 def add(table):
     global cursor
     global connect
@@ -40,7 +48,7 @@ def add(table):
         name = input("Name: ")
         people = int(input("Total People: "))
         cursor.execute(f"insert into customer values({number},'{name}',{people})")
-        connect.commit()
+        confirm()
 
 def modify(table):
     global cursor
@@ -60,25 +68,24 @@ def modify(table):
             old = int(input("Old Number: "))
             new = int(input("New Number: "))
             cursor.execute(f"update room set number={new} where number={old}")
-            connect.commit()
+            confirm()
 
         elif choice == 2: #update type
             number = int(input("Room Number: "))
             new = input("New Type: ")
             cursor.execute(f"update room set type='{new}' where number={number}")
-            connect.commit()
+            confirm()
 
         elif choice == 3: #update cost
             number = int(input("Room Number: "))
             new = int(input("New Cost: "))
             cursor.execute(f"update room set cost={new} where number={number}")
-            connect.commit()
-        
+            confirm()        
         elif choice == 4:
             number = int(input("Room Number: "))
             new = int(input("Availability: "))
             cursor.execute(f"update room set avail={new} where number={number}")
-            connect.commit()
+            confirm()
         
         elif choice == 5:
             return
@@ -95,19 +102,19 @@ def modify(table):
             old = int(input("Old Number: "))
             new = int(input("New Number: "))
             cursor.execute(f"update customer set number={new} where number={old}")
-            connect.commit()
-        
+            confirm()
+            
         elif choice == 2:
             old = input("Old Name: ")
             new = input("New Name: ")
             cursor.execute(f"update customer set name='{new}' where name='{old}'")
-            connect.commit()
+            confirm()
         
         elif choice == 3:
             old = int(input("Old: "))
             new = int(input("New: "))
             cursor.execute(f"update customer set total={new} where total={old}")
-            connect.commit()
+            confirm()
         
         elif choice == 4:
             return
@@ -117,7 +124,7 @@ def delete(table):
     global connect
     number = int(input("Room Number: "))
     cursor.execute(f"delete from {table} where number = {number}")
-    connect.commit()
+    confirm()
 
 def table(table):
     while True:
