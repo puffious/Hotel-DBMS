@@ -95,6 +95,7 @@ def modify(table):
         print("2: Update Name")
         print("3: Update Total")
         print("4: Return")
+        #checkin with checkout
 
         choice = int(input("Choice: "))
 
